@@ -4,7 +4,9 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-from utils import DATA_DIR, RAW_DATA_PATH, log_info, log_success, log_error, set_seed
+import joblib
+import json
+from utils import DATA_DIR, MODELS_DIR, RAW_DATA_PATH, log_info, log_success, log_error, set_seed
 
 DATASET_URL = "https://raw.githubusercontent.com/npradaschnor/Pima-Indians-Diabetes-Dataset/master/diabetes.csv"
 
@@ -91,7 +93,16 @@ def preprocess_and_split(seed=42):
     train_df.to_csv(os.path.join(DATA_DIR, "train.csv"), index=False)
     val_df.to_csv(os.path.join(DATA_DIR, "val.csv"), index=False)
     test_df.to_csv(os.path.join(DATA_DIR, "test.csv"), index=False)
-    log_success("Preprocessed splits saved successfully to the data directory.")
+    
+    # Save scaler and imputation medians for future inference
+    os.makedirs(MODELS_DIR, exist_ok=True)
+    joblib.dump(scaler, os.path.join(MODELS_DIR, "scaler.joblib"))
+    
+    medians_serializable = {k: float(v) for k, v in medians.items()}
+    with open(os.path.join(MODELS_DIR, "medians.json"), "w") as f:
+        json.dump(medians_serializable, f, indent=4)
+        
+    log_success("Preprocessed splits, scaler, and medians saved successfully.")
     return train_df, val_df, test_df
 
 if __name__ == "__main__":
