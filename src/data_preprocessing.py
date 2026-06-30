@@ -4,7 +4,7 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 
-from utils import DATA_DIR, RAW_DATA_PATH, log_info, log_success, set_seed
+from utils import DATA_DIR, RAW_DATA_PATH, log_info, log_success, log_error, set_seed
 
 DATASET_URL = "https://raw.githubusercontent.com/npradaschnor/Pima-Indians-Diabetes-Dataset/master/diabetes.csv"
 
